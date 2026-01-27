@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: jhondel/bulsujuans-frontend-app:latest
+    container_name: bulsujuans-frontend-app-container
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
