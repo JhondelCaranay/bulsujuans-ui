@@ -32,3 +32,8 @@ Thumbs.db
 *.ntvs*
 *.njsproj
 *.sln
+
+Dockerfile
+.dockerignore
+README.md
+.git
