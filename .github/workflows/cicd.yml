@@ -2,7 +2,7 @@ name: Deploy React Application
 on:
   push:
     branches:
-      - production
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,12 +26,20 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Delete old container
+        run: docker rm -f bulsujuans-frontend-app-container || true
+
+      - name: Clean unused Docker images
+        run: docker image prune -af
+
       - name: Pull image from docker hub
         run: docker pull jhondel/bulsujuans-frontend-app:latest
 
       - name: Start frontend with Docker Compose
-        run: |
-          docker compose up -d
+        run: docker-compose up -d
 
       # - name: Delete old container
       #   run: docker rm -f bulsujuans-frontend-app-container

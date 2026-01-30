@@ -6,7 +6,7 @@ services:
     container_name: bulsujuans-frontend-app-container
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3000"
     build:
       context: ./frontend
       args:
