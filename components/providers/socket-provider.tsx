@@ -21,7 +21,7 @@ export const SocketIoProvider: React.FC<React.PropsWithChildren> = ({ children }
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_BACKEND_URL!, {
+    const socketInstance = ClientIO(process.env.NEXT_PUBLIC_SOCKET_URL!, {
       transports: ["websocket"], // optional, skip polling
     });
 
