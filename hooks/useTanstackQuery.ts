@@ -5,10 +5,6 @@ import qs from "query-string";
 
 const controller = new AbortController();
 
-console.log("====================================");
-console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
-console.log("====================================");
-
 export const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`,
   headers: {
