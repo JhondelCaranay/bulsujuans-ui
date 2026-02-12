@@ -1,7 +1,7 @@
 "use client";
 import { Form } from "@/components/ui/form";
 import { NotepadText } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormInput } from "@/components/form/form-input";
 import { FormSearch } from "@/components/form/form-search-input";
@@ -10,23 +10,34 @@ import { FormCheckbox } from "@/components/form/form-checkbox";
 import { FormDate } from "@/components/form/form-data";
 import { FormSubmitButton } from "@/components/form/form-submit-button";
 import { useMutateProcessor } from "@/hooks/useTanstackQuery";
-import { complaintsOptions, TStoreComplaintSchema } from "@/schema/complaints";
+import { complaintsOptions, ComplaintType, TUpdateComplaintSchema } from "@/schema/complaints";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { CreateFormData } from "@/lib/utils";
+import { Complaint } from "@/types";
 
-export const ComplaintForm = () => {
-  const addComplaint = useMutateProcessor<TStoreComplaintSchema | FormData, unknown>({
-    url: "/complaints/store",
+type EditComplaintFormProps = {
+  data: Complaint;
+};
+
+export const EditComplaintForm = ({ data }: EditComplaintFormProps) => {
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const [files, setFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
+
+  const editComplaint = useMutateProcessor<TUpdateComplaintSchema | FormData, unknown>({
+    url: `/complaints/update/${data.id}`,
     key: ["complaints"],
-    method: "POST",
+    method: "PATCH",
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  const isSubmitting = addComplaint.status === "pending";
+  const isSubmitting = editComplaint.status === "pending"; // || mutation.isPending || complaintOptionsQuery.isLoading
 
   const form = useForm({
     defaultValues: {
@@ -37,40 +48,47 @@ export const ComplaintForm = () => {
       typeOfComplaint: "",
       incidentDetails: "",
       dateAndTime: "",
-      is_anonymous: false,
+      is_anonymous: data.is_anonymous || false,
     },
     mode: "all",
     disabled: isSubmitting,
   });
 
-  const router = useRouter();
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        victimName: data.name,
+        contactNo: data.contact_number,
+        alternateMobileNo: data.alternate_contact_number,
+        email: data.email,
+        typeOfComplaint: data.complaint_type,
+        incidentDetails: data.incident_detail,
+        dateAndTime: new Date(data.date_of_incident).toISOString().slice(0, 16),
+        is_anonymous: data.is_anonymous || false,
+      });
+    }
+  }, [data, form]);
 
-  const { user } = useAuth();
-
-  const isDisabled = form.formState.disabled;
-  const [files, setFiles] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
-
-  const onSubmit = (data: any) => {
-    const payload: TStoreComplaintSchema & { documents: File[] } = {
-      name: data.victimName,
-      email: data.email,
-      contact_number: data.contactNo.toString(),
-      alternate_contact_number: data.alternateMobileNo.toString(),
-      incident_detail: data.incidentDetails,
-      complaint_type: data.typeOfComplaint,
-      date_of_incident: data.dateAndTime,
+  const onSubmit = (value: any) => {
+    const payload: TUpdateComplaintSchema & { documents: File[] } = {
+      name: value.victimName,
+      email: value.email,
+      contact_number: value.contactNo.toString(),
+      alternate_contact_number: value.alternateMobileNo.toString(),
+      incident_detail: value.incidentDetails,
+      complaint_type: value.typeOfComplaint,
+      date_of_incident: value.dateAndTime,
       complainant_id: user?.id as string,
-      is_anonymous: data.is_anonymous,
+      is_anonymous: value.is_anonymous,
       documents: files,
     };
 
-    const formData = CreateFormData<TStoreComplaintSchema>(payload);
+    const formData = CreateFormData<TUpdateComplaintSchema>(payload);
 
-    addComplaint.mutate(formData, {
-      onSuccess(data, variables, onMutateResult, context) {
-        toast.success("Complaints submitted", {});
-        router.push("/complaints");
+    editComplaint.mutate(formData, {
+      onSuccess() {
+        toast.success("Complaint updated");
+        router.push(`/complaints/${data.id}`);
       },
     });
   };
@@ -80,6 +98,8 @@ export const ComplaintForm = () => {
     setFiles(selected);
     setPreviews(selected.map((file) => URL.createObjectURL(file)));
   };
+
+  const isDisabled = form.formState.disabled;
 
   return (
     <div className="bg-white w-full rounded-2xl shadow-2xl p-5 overflow-y-auto">
@@ -181,11 +201,10 @@ export const ComplaintForm = () => {
           </section>
 
           <FormSubmitButton
-            label="Submit Complaint"
-            submittingLabel="Submitting"
+            label="Update Complaint"
+            submittingLabel="Updating"
             disabled={isDisabled}
             isSubmitting={isSubmitting}
-            onClear={() => form.reset()} // shows the clear button only when provided
           />
         </form>
       </Form>

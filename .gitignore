@@ -17,6 +17,14 @@
 /.next/
 /out/
 
+# IDE / Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
 # production
 /build
 

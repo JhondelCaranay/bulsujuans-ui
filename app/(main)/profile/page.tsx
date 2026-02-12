@@ -26,8 +26,6 @@ const Page = () => {
 
       <ExperienceSection items={experienceData} />
       <EducationSection items={educationData} />
-
-      {/* <AdditionalSections expandedSections={expandedSections} toggleSection={toggleSection} /> */}
     </div>
   );
 };
