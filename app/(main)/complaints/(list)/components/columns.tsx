@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -13,11 +12,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
-import { TComplaintSchema, TStoreComplaintSchema } from "@/schema/complaints";
 import { Complaint } from "@/types";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { ticketStatusConfig } from "@/app/(main)/tickets/constants/type";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useMutateProcessor } from "@/hooks/useTanstackQuery";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const DATE_FORMAT = `MMM d yyyy`;
 
@@ -164,10 +166,38 @@ export const columns: ColumnDef<Complaint>[] = [
     cell: ({ row }) => {
       const data = row.original;
       const auth = useAuth();
+      const queryClient = useQueryClient();
 
       const canViewComplaintDetai = auth.hasPermission("complaint:view_detail");
       const canEditomplaint = auth.hasPermission("complaint:edit") && data.ticket.status === "PENDING";
-      const canDeleteComplaint = auth.hasPermission("complaint:delete");
+      const canDeleteComplaint = auth.hasPermission("complaint:delete") && data.ticket.status === "PENDING";
+
+      const [DeleteRoleConfirmDialog, confirm] = useConfirm(
+        "Are you sure?",
+        "You are about to delete this record. This action is permanent and cannot be undone.",
+      );
+
+      const deleteComplaint = useMutateProcessor<any, unknown>({
+        url: `/complaints/destroy/${data.id}`,
+        key: ["complaints"],
+        method: "DELETE",
+      });
+
+      const onDelete = async () => {
+        const confirmed = await confirm();
+
+        if (confirmed) {
+          deleteComplaint.mutate(
+            {},
+            {
+              onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ["complaints"] });
+                toast.success("Complaint removed successfully");
+              },
+            },
+          );
+        }
+      };
 
       return (
         <div className="flex justify-center items-center">
@@ -179,24 +209,33 @@ export const columns: ColumnDef<Complaint>[] = [
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem className="flex items-center gap-2" disabled={!canEditomplaint}>
-                <Pencil className="h-4 w-4 text-blue-500" />
-                <Link href={`/complaints/edit/${data.id}`}>Edit</Link>
-              </DropdownMenuItem>
+              <Link href={`/complaints/edit/${data.id}`}>
+                <DropdownMenuItem className="flex items-center gap-2" disabled={!canEditomplaint}>
+                  <Pencil className="h-4 w-4 text-blue-500" />
+                  Edit
+                </DropdownMenuItem>
+              </Link>
 
-              <DropdownMenuItem className="flex items-center gap-2" disabled={!canViewComplaintDetai}>
-                <Eye className="h-4 w-4 text-blue-500" />
-                <Link href={`/complaints/${data.id}`}>View details</Link>
-              </DropdownMenuItem>
+              <Link href={`/complaints/${data.id}`}>
+                <DropdownMenuItem className="flex items-center gap-2" disabled={!canViewComplaintDetai}>
+                  <Eye className="h-4 w-4 text-blue-500" />
+                  View details
+                </DropdownMenuItem>
+              </Link>
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem className="flex items-center gap-2 text-red-600" disabled={!canDeleteComplaint}>
+              <DropdownMenuItem
+                className="flex items-center gap-2 text-red-600"
+                disabled={!canDeleteComplaint}
+                onClick={onDelete}
+              >
                 <Trash2 className="h-4 w-4 text-red-600" />
                 <span>Remove</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <DeleteRoleConfirmDialog />
         </div>
       );
     },

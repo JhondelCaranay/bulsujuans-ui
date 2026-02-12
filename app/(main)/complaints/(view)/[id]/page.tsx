@@ -41,10 +41,10 @@ const Page = () => {
     <div className="w-full h-full p-10">
       <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <Link href="/roles">
+          <Link href="/complaints">
             <Button variant="ghost">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Roles
+              Back to Complaints
             </Button>
           </Link>
         </div>

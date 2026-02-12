@@ -17,6 +17,7 @@ export interface Complaint {
   createdAt: string;
   updatedAt: string;
   deleted_at?: string;
+  is_anonymous?: boolean;
   // relation
   documents: Documents[];
   ticket: Tickets;

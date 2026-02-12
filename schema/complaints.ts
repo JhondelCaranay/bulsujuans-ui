@@ -56,6 +56,7 @@ export const ComplaintSchema = z.object({
     .string("Complainant ID is required")
     .min(1, "Complainant ID must be at least 1 character")
     .max(255, "Complainant ID must be at most 255 characters"),
+  is_anonymous: z.boolean().optional(),
 });
 
 export type TComplaintSchema = z.infer<typeof ComplaintSchema>;
@@ -69,6 +70,7 @@ export const storeComplaintSchema = ComplaintSchema.pick({
   date_of_incident: true,
   complaint_type: true,
   complainant_id: true,
+  is_anonymous: true,
 });
 export type TStoreComplaintSchema = z.infer<typeof storeComplaintSchema>;
 
