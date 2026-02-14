@@ -7,12 +7,11 @@ import { EducationSection } from "./components/education-section";
 import { ExperienceSection } from "./components/experience-section";
 import { useAuth } from "@/hooks/useAuth";
 
-const Page = () => {
-  const [expandedSections, setExpandedSections] = useState<string[]>(["about"]);
+const NODE_ENV = process.env.NODE_ENV || "development";
+console.log("🚀 ~ NODE_ENV:", NODE_ENV);
 
-  const toggleSection = (section: string) => {
-    setExpandedSections((prev) => (prev.includes(section) ? prev.filter((s) => s !== section) : [...prev, section]));
-  };
+const Page = () => {
+  const { user } = useAuth();
 
   return (
     <div className="w-full h-full p-10 space-y-10">
@@ -26,6 +25,13 @@ const Page = () => {
 
       <ExperienceSection items={experienceData} />
       <EducationSection items={educationData} />
+
+      {NODE_ENV === "development" && (
+        <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm text-foreground">
+          <p>total permissions: {user?.permissions ? Object.keys(user.permissions).length : 0}</p>
+          <code>{JSON.stringify(user?.permissions, null, 2)}</code>
+        </pre>
+      )}
     </div>
   );
 };
