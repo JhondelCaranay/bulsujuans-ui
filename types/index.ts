@@ -86,6 +86,7 @@ export interface User {
 
   createdAt: string;
   updatedAt: string;
+  deleted_at?: string | null;
 }
 
 export interface News {

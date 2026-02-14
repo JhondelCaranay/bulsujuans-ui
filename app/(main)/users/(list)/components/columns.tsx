@@ -97,13 +97,42 @@ export const columns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => {
       const role = row.original.role?.name as keyof typeof userRoleConfig;
-      // return <div className={`flex items-center`}>{role}</div>;
       const config = userRoleConfig[role] || userRoleConfig["Unknown"];
 
       return (
         <div>
           <Badge className={cn("dark:text-white bg-slate-500", config.color, config.badge)}>{config.label}</Badge>
         </div>
+      );
+    },
+  },
+  {
+    accessorKey: "deleted_at",
+    header: ({ column }) => (
+      <div
+        className="text-[#181a19] flex items-center cursor-pointer dark:text-white flex-1"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Status
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const deletedAt = row.original.deleted_at;
+
+      const isActive = !deletedAt;
+
+      return (
+        <Badge
+          className={cn(
+            "dark:text-white",
+            isActive
+              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+              : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+          )}
+        >
+          {isActive ? "Active" : "Inactive"}
+        </Badge>
       );
     },
   },
@@ -129,7 +158,6 @@ export const columns: ColumnDef<User>[] = [
       return <div className="">{formatDate(createdAt)}</div>;
     },
   },
-
   {
     id: "actions",
     size: 50,
