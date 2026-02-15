@@ -41,33 +41,18 @@ export const EditComplaintForm = ({ data }: EditComplaintFormProps) => {
 
   const form = useForm({
     defaultValues: {
-      victimName: "",
-      contactNo: "",
-      alternateMobileNo: "",
-      email: "",
-      typeOfComplaint: "",
-      incidentDetails: "",
-      dateAndTime: "",
-      is_anonymous: data.is_anonymous || false,
+      victimName: data.name || undefined,
+      contactNo: data.contact_number || undefined,
+      alternateMobileNo: data.alternate_contact_number || undefined,
+      email: data.email || undefined,
+      typeOfComplaint: data.complaint_type || undefined,
+      incidentDetails: data.incident_detail || undefined,
+      dateAndTime: new Date(data.date_of_incident).toISOString().slice(0, 16) || undefined,
+      is_anonymous: data.is_anonymous || undefined,
     },
     mode: "all",
     disabled: isSubmitting,
   });
-
-  useEffect(() => {
-    if (data) {
-      form.reset({
-        victimName: data.name,
-        contactNo: data.contact_number,
-        alternateMobileNo: data.alternate_contact_number,
-        email: data.email,
-        typeOfComplaint: data.complaint_type,
-        incidentDetails: data.incident_detail,
-        dateAndTime: new Date(data.date_of_incident).toISOString().slice(0, 16),
-        is_anonymous: data.is_anonymous || false,
-      });
-    }
-  }, [data, form]);
 
   const onSubmit = (value: any) => {
     const payload: TUpdateComplaintSchema & { documents: File[] } = {

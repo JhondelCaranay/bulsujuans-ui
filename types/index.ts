@@ -73,6 +73,8 @@ export interface User {
   last_name?: string;
   student_id?: string;
 
+  status?: boolean;
+
   role?: Role;
   role_id?: string;
 

@@ -107,7 +107,7 @@ export const columns: ColumnDef<User>[] = [
     },
   },
   {
-    accessorKey: "deleted_at",
+    accessorKey: "status",
     header: ({ column }) => (
       <div
         className="text-[#181a19] flex items-center cursor-pointer dark:text-white flex-1"
@@ -118,20 +118,18 @@ export const columns: ColumnDef<User>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const deletedAt = row.original.deleted_at;
-
-      const isActive = !deletedAt;
+      const status = row.original.status;
 
       return (
         <Badge
           className={cn(
             "dark:text-white",
-            isActive
+            status
               ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
               : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
           )}
         >
-          {isActive ? "Active" : "Inactive"}
+          {status ? "Active" : "Inactive"}
         </Badge>
       );
     },
@@ -167,7 +165,7 @@ export const columns: ColumnDef<User>[] = [
       const auth = useAuth();
 
       const canViewUserDetail = auth.hasPermission("users:view_detail");
-      const canDeleteUser = auth.hasPermission("users:delete");
+      const canDeleteUser = auth.hasPermission("users:delete") && data.deleted_at == null;
       const canEditUser = auth.hasPermission("users:edit");
 
       return (
