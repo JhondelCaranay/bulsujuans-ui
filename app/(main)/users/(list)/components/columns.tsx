@@ -16,6 +16,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { cn, formatDate } from "@/lib/utils";
 import { userRoleConfig } from "../constants";
 import { Badge } from "@/components/ui/badge";
+import { useQueryClient } from "@tanstack/react-query";
+import { useConfirm } from "@/hooks/use-confirm";
+import { useMutateProcessor } from "@/hooks/useTanstackQuery";
+import { toast } from "sonner";
 export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
@@ -163,10 +167,38 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const data = row.original;
       const auth = useAuth();
+      const queryClient = useQueryClient();
 
       const canViewUserDetail = auth.hasPermission("users:view_detail");
       const canDeleteUser = auth.hasPermission("users:delete") && data.deleted_at == null;
       const canEditUser = auth.hasPermission("users:edit");
+
+      const [DeleteUserConfirmDialog, confirm] = useConfirm(
+        "Are you sure?",
+        "You are about to delete this record. This action is permanent and cannot be undone.",
+      );
+
+      const deleteUser = useMutateProcessor<any, unknown>({
+        url: `/users/destroy/${data.id}`,
+        key: ["users"],
+        method: "DELETE",
+      });
+
+      const onDelete = async () => {
+        const confirmed = await confirm();
+
+        if (confirmed) {
+          deleteUser.mutate(
+            {},
+            {
+              onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ["users"] });
+                toast.success("User removed successfully");
+              },
+            },
+          );
+        }
+      };
 
       return (
         <div className="flex justify-center items-center">
@@ -191,12 +223,17 @@ export const columns: ColumnDef<User>[] = [
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="flex items-center gap-2 text-red-600" disabled={!canDeleteUser}>
+              <DropdownMenuItem
+                className="flex items-center gap-2 text-red-600"
+                disabled={!canDeleteUser}
+                onClick={onDelete}
+              >
                 <Trash2 className="h-4 w-4 text-red-600" />
                 <span>Remove</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <DeleteUserConfirmDialog />
         </div>
       );
     },

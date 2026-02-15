@@ -50,7 +50,6 @@ const EditUserForm = ({ data, officeOptions, roleOptions }: EditUserFormProps) =
   const isDisabled = form.formState.disabled;
 
   const onSubmit = (data: TUpdateUserSchema) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     updateUser.mutate(data, {
       onSuccess: () => {
         form.reset();

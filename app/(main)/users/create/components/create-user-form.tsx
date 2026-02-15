@@ -34,6 +34,7 @@ const CreateUserForm = ({ roleOptions, officeOptions }: CreateUserFormProps) => 
   const form = useForm({
     defaultValues: {
       first_name: "",
+      middle_name: "",
       last_name: "",
       email: "",
       student_id: "",
@@ -69,6 +70,12 @@ const CreateUserForm = ({ roleOptions, officeOptions }: CreateUserFormProps) => 
             <h2 className="font-bold">User Information</h2>
 
             <FormInput control={form.control} name="first_name" label="First Name" placeholder="Enter first name" />
+            <FormInput
+              control={form.control}
+              name="middle_name"
+              label="Middle Name"
+              placeholder="Enter middle initial"
+            />
             <FormInput control={form.control} name="last_name" label="Last Name" placeholder="Enter last name" />
             <FormInput control={form.control} name="email" label="Email Address *" placeholder="Enter email address" />
             <FormInput control={form.control} name="student_id" label="Student ID" placeholder="Enter student ID" />
