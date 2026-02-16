@@ -64,6 +64,94 @@ export interface Access {
   updatedAt: string;
   deleted_at: string | null;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  first_name?: string;
+  middle_name?: string;
+  last_name?: string;
+  student_id?: string;
+
+  status?: boolean;
+
+  role?: Role;
+  role_id?: string;
+
+  office?: Office;
+  office_id?: string;
+
+  complaint?: Complaint[];
+  news?: News[];
+  experiences?: Experience[];
+  education?: Education[];
+
+  createdAt: string;
+  updatedAt: string;
+  deleted_at?: string | null;
+}
+
+export interface News {
+  id: string;
+  title: string;
+  source: string;
+  content: string;
+  category: string;
+  posted_by?: User;
+  posted_by_id?: string;
+
+  createdAt: string;
+  updatedAt: string;
+  deleted_at?: string | null;
+}
+
+export interface Experience {
+  id: string;
+
+  title: string;
+  company: string;
+  description?: string;
+
+  start_year: number;
+  end_year?: number;
+  is_current?: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+  deleted_at?: string;
+
+  user?: User;
+  userId?: string;
+}
+
+export interface Education {
+  id: string;
+
+  degree: string;
+  institution: string;
+  description?: string;
+  year: number;
+
+  createdAt: string;
+  updatedAt: string;
+  deleted_at?: string;
+
+  userId: string;
+  user: User;
+}
+
+export interface Office {
+  id: string;
+  name: string;
+  desc?: string;
+  type: string;
+  ticket: any;
+  users: User[];
+  createdAt: string;
+  updatedAt: string;
+  deleted_at?: string;
+}
+
 export interface Pagination {
   total: number;
   page: number;

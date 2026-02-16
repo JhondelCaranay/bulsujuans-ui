@@ -9,7 +9,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export interface CompoBoxOption {
-  value: string;
+  value: string | number | boolean;
   label: string;
 }
 
@@ -17,7 +17,7 @@ interface CompoBoxProps {
   options: CompoBoxOption[];
   value?: string;
   filterKey: string;
-  onChange: (key: string, value: string) => void;
+  onChange: (key: string, value: string | number | boolean) => void;
   placeholder?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -60,7 +60,7 @@ export function CompoBox({
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
-                  key={option.value}
+                  key={option.value.toString()}
                   value={`${option.value} ${option.label}`}
                   onSelect={() => {
                     onChange(filterKey, option.value);
