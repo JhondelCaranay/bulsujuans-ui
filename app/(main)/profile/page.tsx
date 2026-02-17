@@ -6,12 +6,36 @@ import ProfileInfo from "./components/profile-info";
 import { EducationSection } from "./components/education-section";
 import { ExperienceSection } from "./components/experience-section";
 import { useAuth } from "@/hooks/useAuth";
+import { useQueryProcessor } from "@/hooks/useTanstackQuery";
+import { User } from "@/types";
+import { PageLoading } from "@/components/page-loading";
 
 const NODE_ENV = process.env.NODE_ENV || "development";
-console.log("🚀 ~ NODE_ENV:", NODE_ENV);
+
+export interface UserQuery {
+  data: User;
+  success: boolean;
+  message: string;
+}
 
 const Page = () => {
   const { user } = useAuth();
+
+  const { data: userData, isLoading: isUserLoading } = useQueryProcessor<UserQuery>({
+    url: `/users/show/${user?.id}`,
+    key: ["users", user?.id],
+    options: {
+      enabled: !!user?.id,
+    },
+  });
+
+  if (!userData?.data || isUserLoading) {
+    return (
+      <div className="w-full h-full p-10">
+        <PageLoading />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full p-10 space-y-10">
@@ -19,7 +43,7 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-foreground">Profile</h1>
         <p className="text-muted-foreground">Manage your profile information</p>
       </div>
-      <ProfileHeader />
+      <ProfileHeader data={userData?.data} />
 
       <ProfileInfo />
 
