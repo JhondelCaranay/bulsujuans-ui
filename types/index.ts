@@ -74,6 +74,8 @@ export interface User {
   student_id?: string;
 
   status?: boolean;
+  photo_url?: string;
+  photo_id?: string;
 
   role?: Role;
   role_id?: string;

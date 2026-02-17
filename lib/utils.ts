@@ -62,9 +62,9 @@ export function formatDate(dateString: string | null): string {
 
 type FormatCase = "lower" | "capitalized" | "upper";
 
-export function formatText(status: string, format: FormatCase = "capitalized") {
+export function formatText(text: string, format: FormatCase = "capitalized") {
   // Convert ENUM style (EX: BEING_PROCESS) → array of words
-  const words = status.split("_").map((word) => word.toLowerCase());
+  const words = text.split("_").map((word) => word.toLowerCase());
 
   if (format === "lower") {
     return words.join(" ");
