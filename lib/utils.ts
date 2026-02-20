@@ -63,8 +63,10 @@ export function formatDate(dateString: string | null): string {
 type FormatCase = "lower" | "capitalized" | "upper";
 
 export function formatText(text: string, format: FormatCase = "capitalized") {
-  // Convert ENUM style (EX: BEING_PROCESS) → array of words
-  const words = text.split("_").map((word) => word.toLowerCase());
+  // Replace underscores with spaces
+  const cleaned = text.replace(/_/g, " ").toLowerCase();
+
+  const words = cleaned.split(" ").filter(Boolean);
 
   if (format === "lower") {
     return words.join(" ");
@@ -74,6 +76,17 @@ export function formatText(text: string, format: FormatCase = "capitalized") {
     return words.join(" ").toUpperCase();
   }
 
-  // capitalized (default)
   return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+  // // Convert ENUM style (EX: BEING_PROCESS) → array of words
+  // const words = text.split("_").map((word) => word.toLowerCase());
+
+  // if (format === "lower") {
+  //   return words.join(" ");
+  // }
+
+  // if (format === "upper") {
+  //   return words.join(" ").toUpperCase();
+  // }
+
+  // return words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
 }

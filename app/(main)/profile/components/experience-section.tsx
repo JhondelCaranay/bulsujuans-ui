@@ -4,117 +4,95 @@ import React, { useState } from "react";
 import { ChevronDown, Edit, Trash2, Plus } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-interface ExperienceItem {
-  role: string;
-  company: string;
-  period: string;
-  description: string;
-}
+import { Experience } from "@/types";
+import { useCreateExperienceModal } from "@/hooks/use-base-modal-store";
 
 interface ExperienceSectionProps {
-  items: ExperienceItem[];
+  userId: string;
+  items: Experience[];
   onAdd?: () => void;
-  onEdit?: (index: number) => void;
-  onDelete?: (index: number) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
-export function ExperienceSection({ items, onAdd, onEdit, onDelete }: ExperienceSectionProps) {
+export function ExperienceSection({ userId, items, onAdd, onEdit, onDelete }: ExperienceSectionProps) {
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const createExperienceModal = useCreateExperienceModal();
 
   return (
     <Card>
-      <CardHeader className="cursor-pointer hover:bg-muted/50" onClick={() => setIsExpanded(!isExpanded)}>
+      <CardHeader
+        className="cursor-pointer hover:bg-muted/50 transition-colors"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
         <div className="flex items-center justify-between w-full">
-          <CardTitle>Experience</CardTitle>
+          <CardTitle>Experiences</CardTitle>
+
           <div className="flex items-center space-x-3">
             <Button
               onClick={(e) => {
-                e.stopPropagation(); // prevent toggling collapse
-                // onAdd();
+                e.stopPropagation();
+                createExperienceModal.onOpenChange(true, userId);
               }}
-              className="p-1 rounded cursor-pointer"
+              variant="default"
+              size="icon"
+              className="cursor-pointer"
             >
               <Plus className="h-4 w-4" />
             </Button>
+
             <ChevronDown className={`h-5 w-5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
           </div>
         </div>
       </CardHeader>
 
       {isExpanded && (
-        <CardContent className="space-y-4 border-t border-border pt-4">
-          {items.map((item, idx) => (
-            <div key={idx} className="space-y-1 border-b border-muted/20 pb-2">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-semibold text-foreground">{item.role}</p>
-                  <p className="text-sm text-muted-foreground">{item.company}</p>
+        <CardContent className="space-y-6 border-t pt-6">
+          {items.length === 0 && <p className="text-sm text-muted-foreground">No experiences added yet.</p>}
+
+          {items.map((item) => {
+            const period = item.is_current
+              ? `${item.start_year} - Present`
+              : item.end_year
+                ? `${item.start_year} - ${item.end_year}`
+                : `${item.start_year}`;
+
+            return (
+              <div key={item.id} className="space-y-2 border-b pb-4 last:border-none">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <p className="font-semibold text-base">{item.title}</p>
+                    <p className="text-sm text-muted-foreground">{item.company}</p>
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">{period}</span>
+
+                    <Button onClick={() => onEdit?.(item.id)} variant="ghost" size="icon" title="Edit">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      title="Delete"
+                      onClick={() => onDelete?.(item.id)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-muted-foreground">{item.period}</span>
-                  <Button variant={"secondary"} onClick={() => {}} className="p-1 rounded" title="Edit">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button variant={"destructive"} onClick={() => {}} className="p-1 rounded" title="Delete">
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
-                </div>
+
+                {item.description && (
+                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                )}
               </div>
-              <p className="text-sm text-foreground">{item.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </CardContent>
       )}
     </Card>
   );
 }
-
-// "use client";
-
-// import React, { useState } from "react";
-// import { ChevronDown } from "lucide-react";
-// import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
-// interface ExperienceItem {
-//   role: string;
-//   company: string;
-//   period: string;
-//   description: string;
-// }
-
-// interface ExperienceSectionProps {
-//   items: ExperienceItem[];
-// }
-
-// export function ExperienceSection({ items }: ExperienceSectionProps) {
-//   const [isExpanded, setIsExpanded] = useState(true);
-
-//   return (
-//     <Card>
-//       <CardHeader className="cursor-pointer hover:bg-muted/50" onClick={() => setIsExpanded(!isExpanded)}>
-//         <div className="flex items-center justify-between">
-//           <CardTitle>Experience</CardTitle>
-//           <ChevronDown className={`h-5 w-5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
-//         </div>
-//       </CardHeader>
-
-//       {isExpanded && (
-//         <CardContent className="space-y-4 border-t border-border pt-4">
-//           {items.map((item, idx) => (
-//             <div key={idx} className="space-y-1">
-//               <div className="flex items-start justify-between">
-//                 <div>
-//                   <p className="font-semibold text-foreground">{item.role}</p>
-//                   <p className="text-sm text-muted-foreground">{item.company}</p>
-//                 </div>
-//                 <span className="text-sm text-muted-foreground">{item.period}</span>
-//               </div>
-//               <p className="text-sm text-foreground">{item.description}</p>
-//             </div>
-//           ))}
-//         </CardContent>
-//       )}
-//     </Card>
-//   );
-// }
