@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import QueryProvider from "./query-provider";
-// import ModalProvider from "./ModalProvider";
 import { ThemeProvider } from "next-themes";
 import { SocketIoProvider } from "./socket-provider";
 import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "./auth-provider";
+import ModalProvider from "./modal-provider";
 const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <>
@@ -19,11 +19,12 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
         <SocketIoProvider>
           <QueryProvider>
             <AuthProvider>
+              <ModalProvider />
               {/* <SessionProvider> */}
-              {/* <ModalProvider /> */}
               {children}
               <Toaster position="top-center" />
               {/* </SessionProvider> */}
+              <ModalProvider />
             </AuthProvider>
           </QueryProvider>
         </SocketIoProvider>

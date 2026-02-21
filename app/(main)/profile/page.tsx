@@ -1,19 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import ProfileHeader from "./components/profile-header";
 import ProfileInfo from "./components/profile-info";
 import { EducationSection } from "./components/education-section";
 import { ExperienceSection } from "./components/experience-section";
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryProcessor } from "@/hooks/useTanstackQuery";
-import { User } from "@/types";
+import { Experience, User } from "@/types";
 import { PageLoading } from "@/components/page-loading";
 
 const NODE_ENV = process.env.NODE_ENV || "development";
 
 export interface UserQuery {
   data: User;
+  success: boolean;
+  message: string;
+}
+
+export interface ExperienceQuery {
+  data: Experience[];
   success: boolean;
   message: string;
 }
@@ -29,7 +35,19 @@ const Page = () => {
     },
   });
 
-  if (!userData?.data || isUserLoading) {
+  const { data: experienceData, isLoading: isExperienceLoading } = useQueryProcessor<ExperienceQuery>({
+    url: `/experiences/list`,
+
+    key: ["experiences", user?.id],
+    options: {
+      enabled: !!user?.id,
+    },
+    queryParams: {
+      user_id: user?.id,
+    },
+  });
+
+  if (!userData?.data || !experienceData?.data || isUserLoading || isExperienceLoading) {
     return (
       <div className="w-full h-full p-10">
         <PageLoading />
@@ -45,9 +63,9 @@ const Page = () => {
       </div>
       <ProfileHeader data={userData?.data} />
 
-      <ProfileInfo />
+      <ProfileInfo data={userData?.data} />
 
-      <ExperienceSection items={experienceData} />
+      <ExperienceSection items={experienceData.data} />
       <EducationSection items={educationData} />
 
       {NODE_ENV === "development" && (

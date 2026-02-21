@@ -105,7 +105,6 @@ export default function ProfileHeader({ data }: ProfileHeaderProps) {
                 ✎
               </Button>
 
-              {/* Hidden file input */}
               <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleFileChange} />
             </div>
             <div className="pb-2">

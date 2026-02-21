@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: DashboardLayoutPops) => {
   return (
     <SidebarProvider defaultOpen={isOpen} onOpenChange={handleChange} open={isOpen}>
       <AppSidebar />
-      <main className="w-full flex flex-col">
+      <main className="w-full flex flex-col overflow-x-hidden">
         <div className="w-full p-2 lg:px-8 sticky top-0 flex justify-between items-center border-b bg-background">
           <SidebarTrigger className="cursor-pointer" />
         </div>

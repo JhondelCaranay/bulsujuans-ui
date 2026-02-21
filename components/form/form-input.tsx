@@ -40,7 +40,7 @@ export function FormInput<T extends FieldValues>({
               className="bg-gray-100"
             />
           </FormControl>
-          <FormMessage />
+          <FormMessage className="text-xs" />
         </FormItem>
       )}
     />

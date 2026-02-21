@@ -36,10 +36,10 @@ export function FormSearch<T extends FieldValues>({
           </FormLabel>
           <FormControl>
             <CompoBox
-              filterKey={name} // so it works with your CompoBox API
+              filterKey={name}
               options={options}
               value={field.value}
-              onChange={(_, value) => field.onChange(value)} // integrate with RHF
+              onChange={(_, value) => field.onChange(value)}
               placeholder={placeholder}
               searchPlaceholder={searchPlaceholder}
               emptyMessage={emptyMessage}
