@@ -13,4 +13,4 @@ export const createBaseModalStore = () =>
     onOpenChange: (open: boolean, uuid?: string) => set({ isOpen: open, uuid: uuid }),
   }));
 
-export const useCreateExperienceModal = createBaseModalStore();
+export const useExperienceFormModal = createBaseModalStore();

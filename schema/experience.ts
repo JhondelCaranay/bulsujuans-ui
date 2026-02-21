@@ -45,5 +45,11 @@ export const storeExperienceSchema = z
   });
 
 export type TStoreExperienceSchema = z.infer<typeof storeExperienceSchema>;
-export const updateExperienceSchema = storeExperienceSchema.partial();
+
+export const updateExperienceSchema = storeExperienceSchema
+  .safeExtend({
+    uuid: z.string(),
+  })
+  .partial();
+
 export type TUpdateExperienceSchema = z.infer<typeof updateExperienceSchema>;

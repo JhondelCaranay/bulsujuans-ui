@@ -18,14 +18,14 @@ const Provider: React.FC<React.PropsWithChildren> = ({ children }) => {
       >
         <SocketIoProvider>
           <QueryProvider>
-            <ModalProvider />
             <AuthProvider>
+              <ModalProvider />
               {/* <SessionProvider> */}
               {children}
               <Toaster position="top-center" />
               {/* </SessionProvider> */}
+              <ModalProvider />
             </AuthProvider>
-            <ModalProvider />
           </QueryProvider>
         </SocketIoProvider>
       </ThemeProvider>

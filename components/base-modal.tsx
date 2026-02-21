@@ -39,7 +39,7 @@ export function BaseModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`${sizeClasses[size]} max-h-[90vh] overflow-y-auto`}>
+      <DialogContent className={`${sizeClasses[size]} max-h-[98vh] overflow-y-auto`}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

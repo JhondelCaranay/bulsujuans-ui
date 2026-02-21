@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import ProfileHeader from "./components/profile-header";
 import ProfileInfo from "./components/profile-info";
 import { EducationSection } from "./components/education-section";
@@ -65,19 +65,15 @@ const Page = () => {
 
       <ProfileInfo data={userData?.data} />
 
-      <ExperienceSection items={experienceData.data} userId={userData?.data.id} />
+      <ExperienceSection items={experienceData.data} />
       <EducationSection items={educationData} />
 
-      {/* <pre>
-        <code>{JSON.stringify(educationData, null, 2)}</code>
-      </pre> */}
-
-      {/* {NODE_ENV === "development" && (
+      {NODE_ENV === "development" && (
         <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm text-foreground">
           <p>total permissions: {user?.permissions ? Object.keys(user.permissions).length : 0}</p>
           <code>{JSON.stringify(user?.permissions, null, 2)}</code>
         </pre>
-      )} */}
+      )}
     </div>
   );
 };
