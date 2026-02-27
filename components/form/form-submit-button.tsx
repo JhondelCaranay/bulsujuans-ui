@@ -11,8 +11,8 @@ interface FormSubmitButtonProps {
   disabled?: boolean;
   className?: string;
   variant?: "default" | "secondary" | "destructive" | "outline" | "ghost" | "link";
-  onClear?: () => void; // 👈 optional clear function
-  clearLabel?: string; // optional label override for clear button
+  onClear?: () => void;
+  clearLabel?: string;
 }
 
 export function FormSubmitButton({
@@ -45,7 +45,7 @@ export function FormSubmitButton({
         variant={variant}
         className={cn(
           "dark:text-white cursor-pointer self-end disabled:opacity-50 disabled:cursor-not-allowed",
-          className
+          className,
         )}
         disabled={disabled || isSubmitting}
       >
