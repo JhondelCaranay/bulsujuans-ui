@@ -15,7 +15,7 @@ interface ExperienceSectionProps {
 
 export function ExperienceSection({ items }: ExperienceSectionProps) {
   const { hasPermission } = useAuth();
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const experienceFormModal = useExperienceFormModal();
   const canEditProfile = hasPermission("profile:edit_profile");

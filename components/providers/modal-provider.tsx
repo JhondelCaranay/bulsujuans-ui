@@ -1,20 +1,13 @@
+import EducationFormModal from "@/app/(main)/profile/components/modal/education-form-modal";
 import ExperienceFormModal from "@/app/(main)/profile/components/modal/experience-form-modal";
-import { useExperienceFormModal } from "@/hooks/use-base-modal-store";
-import { useQueryProcessor } from "@/hooks/useTanstackQuery";
-import { Experience } from "@/types";
+import { useEducationFormModal, useExperienceFormModal } from "@/hooks/use-base-modal-store";
 
 const ModalProvider = () => {
   const experienceFormModal = useExperienceFormModal();
+  const educationFormModal = useEducationFormModal();
 
-  const { data: experienceData, isLoading: isLoadingExperience } = useQueryProcessor<{ data: Experience }>({
-    url: `/experiences/show/${experienceFormModal.uuid}`,
-    key: ["experiences", experienceFormModal.uuid],
-    options: {
-      enabled: !!experienceFormModal.uuid,
-    },
-  });
-
-  if (experienceFormModal.isOpen && !isLoadingExperience) return <ExperienceFormModal data={experienceData?.data} />;
+  if (experienceFormModal.isOpen) return <ExperienceFormModal />;
+  if (educationFormModal.isOpen) return <EducationFormModal />;
 };
 
 export default ModalProvider;
