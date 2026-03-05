@@ -40,7 +40,6 @@ const Page = () => {
 
   const { data: experienceData } = useQueryProcessor<ExperienceQuery>({
     url: `/experiences/list`,
-
     key: ["experiences", user?.id],
     options: {
       enabled: !!user?.id,
