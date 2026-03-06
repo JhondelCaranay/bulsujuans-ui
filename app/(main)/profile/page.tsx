@@ -30,7 +30,7 @@ export interface EducationQuery {
 const Page = () => {
   const { user } = useAuth();
 
-  const { data: userData } = useQueryProcessor<UserQuery>({
+  const { data: userData, isLoading: isUserLoading } = useQueryProcessor<UserQuery>({
     url: `/users/show/${user?.id}`,
     key: ["users", user?.id],
     options: {
@@ -38,7 +38,7 @@ const Page = () => {
     },
   });
 
-  const { data: experienceData } = useQueryProcessor<ExperienceQuery>({
+  const { data: experienceData, isLoading: isExpLoading } = useQueryProcessor<ExperienceQuery>({
     url: `/experiences/list`,
     key: ["experiences", user?.id],
     options: {
@@ -49,7 +49,7 @@ const Page = () => {
     },
   });
 
-  const { data: educationData } = useQueryProcessor<EducationQuery>({
+  const { data: educationData, isLoading: isEduLoading } = useQueryProcessor<EducationQuery>({
     url: `/education/list`,
 
     key: ["educations", user?.id],
@@ -61,13 +61,14 @@ const Page = () => {
     },
   });
 
-  if (!userData?.data || !experienceData?.data || !educationData?.data) {
+  if (isUserLoading || isExpLoading || isEduLoading) {
     return (
       <div className="w-full h-full p-10">
         <PageLoading />
       </div>
     );
   }
+  console.log(userData);
 
   return (
     <div className="w-full h-full p-10 space-y-10">
@@ -75,12 +76,11 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-foreground">Profile</h1>
         <p className="text-muted-foreground">Manage your profile information</p>
       </div>
-      <ProfileHeader data={userData?.data} />
+      {userData?.data && <ProfileHeader data={userData?.data} />}
+      {userData?.data && <ProfileInfo data={userData?.data} />}
 
-      <ProfileInfo data={userData?.data} />
-
-      <ExperienceSection items={experienceData.data} />
-      <EducationSection items={educationData.data} />
+      <ExperienceSection items={experienceData?.data || []} />
+      <EducationSection items={educationData?.data || []} />
     </div>
   );
 };

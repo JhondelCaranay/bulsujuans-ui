@@ -26,7 +26,7 @@ export default function ProfileInfo({ data }: ProfileInfoProps) {
           <InfoItem
             icon={<UserIcon className="h-5 w-5 text-primary" />}
             label="Name"
-            value={formatText(`${data.first_name} ${data.middle_name ?? ""} ${data.last_name}`, "capitalized")}
+            value={formatText(`${data?.first_name} ${data?.middle_name ?? ""} ${data?.last_name}`, "capitalized")}
           />
         </div>
 
@@ -37,11 +37,11 @@ export default function ProfileInfo({ data }: ProfileInfoProps) {
             label="System Role"
             value={formatText(data?.role?.name || "", "capitalized")}
           />
-          {data.student_id && (
+          {data?.student_id && (
             <InfoItem
               icon={<Briefcase className="h-5 w-5 text-primary" />}
               label="Student ID"
-              value={data.student_id}
+              value={data?.student_id}
             />
           )}
         </div>

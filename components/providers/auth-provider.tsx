@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // FETCH USER USING REFRESH-TOKEN AND VALIDATE PERMISSIONS
   // ----------------------------
   useEffect(() => {
-    if (isPrivatePath) {
+    if (isPrivatePath && user == null) {
       const fetchUser = async () => {
         const refreshToken = localStorage.getItem("refresh-token");
 
