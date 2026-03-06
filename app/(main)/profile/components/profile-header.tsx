@@ -22,8 +22,8 @@ export default function ProfileHeader({ data }: ProfileHeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const updateProfilePhoto = useMutateProcessor<any | FormData, unknown>({
-    url: `/users/photo/update/${data.id}`,
-    key: ["users", data.id],
+    url: `/users/photo/update/${data?.id}`,
+    key: ["users", data?.id],
     method: "PATCH",
     headers: {
       "Content-Type": "multipart/form-data",
@@ -54,7 +54,7 @@ export default function ProfileHeader({ data }: ProfileHeaderProps) {
     return parts.length === 1 ? parts[0][0].toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
-  const initials = getInitials(`${data.first_name} ${data.last_name}`);
+  const initials = getInitials(`${data?.first_name} ${data?.last_name}`);
 
   const getColorFromName = (name?: string) => {
     const colors = ["#F87171", "#FBBF24", "#34D399", "#60A5FA", "#A78BFA", "#F472B6", "#F97316"];
@@ -63,7 +63,7 @@ export default function ProfileHeader({ data }: ProfileHeaderProps) {
     return colors[charCodeSum % colors.length];
   };
 
-  const bgColor = getColorFromName(`${data.first_name} ${data.last_name}`);
+  const bgColor = getColorFromName(`${data?.first_name} ${data?.last_name}`);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -86,7 +86,7 @@ export default function ProfileHeader({ data }: ProfileHeaderProps) {
           <div className="flex items-end gap-4">
             <div className="relative">
               <Avatar className="h-32 w-32 border-4 shadow-md border-card text-2xl font-bold flex items-center justify-center">
-                <AvatarImage src={data.photo_url} className="h-full w-full object-cover" />
+                <AvatarImage src={data?.photo_url} className="h-full w-full object-cover" />
                 <AvatarFallback style={{ backgroundColor: bgColor }}>
                   {previews[0] ? (
                     <img src={previews[0]} alt="profile" className="h-full w-full object-cover" />
@@ -109,9 +109,9 @@ export default function ProfileHeader({ data }: ProfileHeaderProps) {
             </div>
             <div className="pb-2">
               <h2 className="text-2xl font-bold text-foreground">
-                {formatText(`${data.first_name} ${data.last_name}`, "capitalized")}
+                {formatText(`${data?.first_name} ${data?.last_name}`, "capitalized")}
               </h2>
-              <p className="text-muted-foreground">{formatText(data.role?.name || "", "capitalized")}</p>
+              <p className="text-muted-foreground">{formatText(data?.role?.name || "", "capitalized")}</p>
             </div>
           </div>
           <div className="flex gap-2">
