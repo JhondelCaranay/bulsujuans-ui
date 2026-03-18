@@ -61,3 +61,34 @@
 .editor-content :where(code) {
   @apply bg-gray-100 px-1 rounded text-xs font-mono; /* smaller inline code */
 }
+
+.editor-content :where(ul) {
+  @apply list-disc ml-5 mb-3;
+  padding-left: 0;
+}
+
+.editor-content :where(ol) {
+  @apply list-decimal ml-5 mb-3;
+  padding-left: 0;
+}
+
+.editor-content :where(li) {
+  @apply text-sm leading-relaxed text-gray-800;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.editor-content :where(li:empty)::before {
+  content: none;
+}
+
+.editor-content li {
+  list-style-position: outside;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.editor-content li p {
+  display: inline;
+  margin: 0;
+}

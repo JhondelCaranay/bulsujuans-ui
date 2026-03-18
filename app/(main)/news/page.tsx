@@ -9,6 +9,7 @@ import { News, Pagination } from "@/types";
 import { PageLoading } from "@/components/page-loading";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useNewsFormModal } from "@/hooks/use-base-modal-store";
 
 export type NewsQuery = {
   data: News[];
@@ -20,6 +21,7 @@ export type NewsQuery = {
 const Page = () => {
   const { hasPermission } = useAuth();
   const [page, setPage] = useState(1);
+  const newsFormModal = useNewsFormModal();
 
   const { data: newsData, isLoading: isExpLoading } = useQueryProcessor<NewsQuery>({
     url: `/news/list`,
@@ -53,7 +55,9 @@ const Page = () => {
         {canCreateNews && (
           <Button
             className="px-4 py-2 rounded cursor-pointer"
-            onClick={() => console.log("Create button clicked")}
+            onClick={() => {
+              newsFormModal.onOpenChange(true);
+            }}
             disabled={!canCreateNews}
           >
             Create
