@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { FormInput } from "@/components/form/form-input";
 import { FormSubmitButton } from "@/components/form/form-submit-button";
-import { FormTextarea } from "@/components/form/form-textarea";
 import { Form } from "@/components/ui/form";
 
-import { NewsCategory, storeNewsSchema, TStoreNewsSchema, TUpdateNewsSchema, updateNewsSchema } from "@/schema/news";
+import { NewsCategory, storeNewsSchema, TUpdateNewsSchema, updateNewsSchema } from "@/schema/news";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +15,6 @@ import { FormSearch } from "@/components/form/form-search-input";
 import { CreateFormData } from "@/lib/utils";
 import { FormFileInput } from "@/components/form/form-file-input";
 import { FormRichText } from "@/components/form/form-rich-text-editor";
-import htmlParser from "html-react-parser";
 
 type NewsFormProps = {
   userId?: string;
@@ -70,7 +68,7 @@ const NewsForm = ({ userId, defaiultValues }: NewsFormProps) => {
       source: data.source,
       content: data.content,
       category: data.category,
-      posted_by_id: data.posted_by_id,
+      posted_by_id: newsId ? undefined : data.posted_by_id,
       documents: data.documents,
     };
     console.log("🚀 ~ onSubmit ~ payload:", payload);
@@ -78,13 +76,13 @@ const NewsForm = ({ userId, defaiultValues }: NewsFormProps) => {
     const formData = CreateFormData<any>(payload);
 
     if (newsId) {
-      // editNews.mutate(formData, {
-      //   onSuccess: () => {
-      //     form.reset();
-      //     toast.success("News edited successfully");
-      //     newsFormModal.onOpenChange(false);
-      //   },
-      // });
+      editNews.mutate(formData, {
+        onSuccess: () => {
+          form.reset();
+          toast.success("News edited successfully");
+          newsFormModal.onOpenChange(false);
+        },
+      });
     } else {
       createNews.mutate(formData, {
         onSuccess: () => {

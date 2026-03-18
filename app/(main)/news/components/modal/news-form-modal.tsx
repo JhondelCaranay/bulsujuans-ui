@@ -20,7 +20,7 @@ const NewsFormModal = () => {
 
   const { data: newsData, isLoading: isLoadingNews } = useQueryProcessor<NewsDetailQuery>({
     url: `/news/show/${newsId}`,
-    key: ["newss", newsId],
+    key: ["news", newsId],
     options: {
       enabled: !!newsId,
     },
