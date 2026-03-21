@@ -1,19 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { formatDate } from "@/lib/utils";
+import { News } from "@/types";
 
 interface NewsListItemProps {
-  item: {
-    id: number;
-    title: string;
-    date: string;
-    source: string;
-    category: string;
-  };
+  item: News;
   isSelected: boolean;
   onClick: () => void;
 }
-
 export default function NewsListItem({ item, isSelected, onClick }: NewsListItemProps) {
   return (
     <Button
@@ -25,8 +20,10 @@ export default function NewsListItem({ item, isSelected, onClick }: NewsListItem
     >
       <div className="flex items-start justify-between gap-3 w-full">
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">{item.date}</div>
-          <h3 className="text-xs md:text-base font-semibold text-foreground mb-2 text-left break-words whitespace-normal">
+          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">
+            {formatDate(item.createdAt)}
+          </div>
+          <h3 className="text-xs md:text-sm font-semibold mb-2 text-left break-words whitespace-normal line-clamp-2">
             {item.title}
           </h3>
           <div className="text-xs text-muted-foreground">{item.source}</div>

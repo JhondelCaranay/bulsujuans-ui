@@ -1,0 +1,94 @@
+/* src/styles/editor.css */
+
+.editor-content .ProseMirror:focus {
+  outline: none;
+}
+
+/* Paragraphs */
+.editor-content :where(p) {
+  @apply text-sm leading-relaxed text-gray-800 mb-2.5; /* smaller than text-base */
+}
+
+/* Headings */
+.editor-content :where(h1) {
+  @apply text-2xl font-bold leading-snug mb-3.5 text-gray-900; /* was 3xl */
+}
+
+.editor-content :where(h2) {
+  @apply text-xl font-semibold leading-snug mb-3 text-gray-900; /* was 2xl */
+}
+
+.editor-content :where(h3) {
+  @apply text-lg font-semibold mb-2 text-gray-900; /* was xl */
+}
+
+.editor-content :where(h4) {
+  @apply text-base font-semibold mb-2 text-gray-900; /* was lg */
+}
+
+.editor-content :where(h5) {
+  @apply text-sm font-medium mb-1.5 text-gray-900; /* was base */
+}
+
+.editor-content :where(h6) {
+  @apply text-xs font-medium uppercase tracking-wide mb-1.5 text-gray-900; /* was sm */
+}
+
+/* Lists */
+.editor-content :where(ul) {
+  @apply list-disc list-inside mb-2.5 ml-4;
+}
+
+.editor-content :where(ol) {
+  @apply list-decimal list-inside mb-2.5 ml-4;
+}
+
+/* Links */
+.editor-content :where(a) {
+  @apply text-blue-600 hover:underline;
+}
+
+/* Blockquotes */
+.editor-content :where(blockquote) {
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-700 mb-3.5;
+}
+
+/* Code blocks */
+.editor-content :where(pre) {
+  @apply bg-gray-100 p-2.5 rounded-md font-mono text-xs overflow-x-auto; /* slightly smaller */
+}
+
+.editor-content :where(code) {
+  @apply bg-gray-100 px-1 rounded text-xs font-mono; /* smaller inline code */
+}
+
+.editor-content :where(ul) {
+  @apply list-disc ml-5 mb-3;
+  padding-left: 0;
+}
+
+.editor-content :where(ol) {
+  @apply list-decimal ml-5 mb-3;
+  padding-left: 0;
+}
+
+.editor-content :where(li) {
+  @apply text-sm leading-relaxed text-gray-800;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.editor-content :where(li:empty)::before {
+  content: none;
+}
+
+.editor-content li {
+  list-style-position: outside;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.editor-content li p {
+  display: inline;
+  margin: 0;
+}

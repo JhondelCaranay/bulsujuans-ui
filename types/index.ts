@@ -102,6 +102,8 @@ export interface News {
   posted_by?: User;
   posted_by_id?: string;
 
+  documents: Documents[];
+
   createdAt: string;
   updatedAt: string;
   deleted_at?: string | null;

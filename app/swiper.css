@@ -1,0 +1,36 @@
+/* Style the button container */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* make it circular */
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+/* Hover effect */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Arrow color & size (SVG inside inherits currentColor) */
+.swiper-button-next svg,
+.swiper-button-prev svg {
+  width: 12px !important; /* adjust arrow width */
+  height: 24px !important; /* adjust arrow height */
+  color: white; /* arrow color */
+}
+
+/* Position tweak if needed */
+.swiper-button-prev {
+  left: 10px;
+}
+.swiper-button-next {
+  right: 10px;
+}

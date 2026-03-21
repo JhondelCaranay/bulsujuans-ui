@@ -15,3 +15,5 @@ export const createBaseModalStore = () =>
 
 export const useExperienceFormModal = createBaseModalStore();
 export const useEducationFormModal = createBaseModalStore();
+
+export const useNewsFormModal = createBaseModalStore();

@@ -68,7 +68,6 @@ const Page = () => {
       </div>
     );
   }
-  console.log(userData);
 
   return (
     <div className="w-full h-full p-10 space-y-10">

@@ -1,6 +1,7 @@
 export enum userRole {
   ADMIN = "admin",
   STUDENT = "students",
+  STUDENT_ORG = "student-org",
   TEACHER = "teaching staff",
   NONTEACHER = "non-teaching staff",
 }
@@ -17,6 +18,13 @@ export const userRoleConfig = {
     color: "bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800",
     badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
     label: "Student",
+    status_color: "bg-blue-500",
+  },
+
+  [userRole.STUDENT_ORG]: {
+    color: "bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800",
+    badge: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+    label: "Student Organization",
     status_color: "bg-blue-500",
   },
 

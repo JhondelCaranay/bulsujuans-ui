@@ -1,34 +1,94 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewsDetail from "./components/news-detail";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import NewsListItem from "./components/news-list-item";
 import NewsPagination from "./components/news-pagination";
+import { useQueryProcessor } from "@/hooks/useTanstackQuery";
+import { News, Pagination } from "@/types";
+import { PageLoading } from "@/components/page-loading";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useNewsFormModal } from "@/hooks/use-base-modal-store";
+
+export type NewsQuery = {
+  data: News[];
+  success: boolean;
+  message: string;
+  pagination: Pagination;
+};
 
 const Page = () => {
-  const [selectedNews, setSelectedNews] = useState(newsItems[0]);
-  return (
-    <div className="w-full h-full p-10 flex gap-5">
-      <div className="p-4 md:p-8 w-full md:w-2/5 border-r h-full">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">NEWS.</h1>
-        {/* <ScrollArea className="h-full max-h-[580px]"> */}
-        <div className="space-y-4">
-          {newsItems.map((item) => (
-            <NewsListItem
-              key={item.id}
-              item={item}
-              isSelected={selectedNews.id === item.id}
-              onClick={() => setSelectedNews(item)}
-            />
-          ))}
-        </div>
-        {/* </ScrollArea> */}
-        <NewsPagination page={10} totalPages={10} />
-      </div>
+  const { hasPermission } = useAuth();
+  const [page, setPage] = useState(1);
+  const newsFormModal = useNewsFormModal();
 
-      <div className="hidden md:flex w-3/5 flex-col overflow-y-auto bg-background">
-        <NewsDetail news={selectedNews} />
+  const { data: newsData, isLoading: isExpLoading } = useQueryProcessor<NewsQuery>({
+    url: `/news/list`,
+    key: ["news", page],
+    queryParams: {
+      page,
+    },
+  });
+
+  const [selectedNews, setSelectedNews] = useState<News | null>(null);
+
+  useEffect(() => {
+    if (newsData?.data?.length) {
+      setSelectedNews(newsData.data[0]);
+    }
+  }, [newsData]);
+
+  const canCreateNews = hasPermission("news:create");
+
+  if (isExpLoading) {
+    return (
+      <div className="w-full h-full p-10">
+        <PageLoading />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full p-10 flex flex-col gap-4">
+      <div className="flex justify-end">
+        {canCreateNews && (
+          <Button
+            className="px-4 py-2 rounded cursor-pointer"
+            onClick={() => {
+              newsFormModal.onOpenChange(true);
+            }}
+            disabled={!canCreateNews}
+          >
+            Create
+          </Button>
+        )}
+      </div>
+      <div className="w-full h-full flex gap-5">
+        <div className="p-4 md:p-8 w-full md:w-2/5 border-r h-full">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-8">NEWS.</h1>
+          <div className="space-y-4">
+            {newsData?.data.map((item) => (
+              <NewsListItem
+                key={item.id}
+                item={item}
+                isSelected={selectedNews?.id === item.id}
+                onClick={() => setSelectedNews(item)}
+              />
+            ))}
+          </div>
+          <NewsPagination
+            page={newsData?.pagination.page ?? 1}
+            totalPages={newsData?.pagination.totalPages ?? 1}
+            onNext={() => setPage((p) => p + 1)}
+            onPrev={() => setPage((p) => p - 1)}
+          />
+        </div>
+        {selectedNews && (
+          <div className="hidden md:flex w-3/5 flex-col overflow-y-auto bg-background">
+            <NewsDetail news={selectedNews} />
+          </div>
+        )}
       </div>
     </div>
   );
