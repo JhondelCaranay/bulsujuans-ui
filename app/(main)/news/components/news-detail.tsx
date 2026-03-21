@@ -15,19 +15,52 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Edit, Trash } from "lucide-react";
 import { useNewsFormModal } from "@/hooks/use-base-modal-store";
+import { useConfirm } from "@/hooks/use-confirm";
+import { toast } from "sonner";
+import { useMutateProcessor } from "@/hooks/useTanstackQuery";
 
 interface NewsDetailProps {
   news: News;
 }
 export default function NewsDetail({ news }: NewsDetailProps) {
-  const { hasPermission } = useAuth();
+  const { hasPermission, user } = useAuth();
+
+  const [DeleteNewsConfirmDialog, confirm] = useConfirm(
+    "Are you sure?",
+    "You are about to delete this record. This action is permanent and cannot be undone.",
+  );
+
   const newsFormModal = useNewsFormModal();
 
+  const deleteNews = useMutateProcessor<any, unknown>({
+    url: `/news/destroy/${news.id}`,
+    key: ["news"],
+    method: "DELETE",
+  });
+  console.log({
+    userid: user?.id,
+    postedBy: news.posted_by_id,
+  });
+
   const canEditNews = hasPermission("news:edit");
-  const canDeleteNews = hasPermission("news:delete");
+  const canDeleteNews = hasPermission("news:delete") && user?.id == news.posted_by_id;
 
   const handleEdit = (id: string) => {
     newsFormModal.onOpenChange(true, id);
+  };
+
+  const handleDelete = async () => {
+    const confirmed = await confirm();
+    if (confirmed) {
+      deleteNews.mutate(
+        {},
+        {
+          onSuccess: () => {
+            toast.success("News removed successfully");
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -56,7 +89,7 @@ export default function NewsDetail({ news }: NewsDetailProps) {
             </Button>
             <Button
               className="cursor-pointer"
-              onClick={() => {}}
+              onClick={() => handleDelete()}
               variant="ghost"
               size="sm"
               title="Edit"
@@ -104,6 +137,8 @@ export default function NewsDetail({ news }: NewsDetailProps) {
         {/* News Content */}
         <div className="editor-content text-xs">{parse(news.content)}</div>
       </div>
+
+      <DeleteNewsConfirmDialog />
     </article>
   );
 }
