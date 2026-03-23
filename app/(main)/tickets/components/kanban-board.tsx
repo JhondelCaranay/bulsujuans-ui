@@ -5,6 +5,7 @@ import { Pagination, Tickets } from "@/types";
 import { KanbanColumn } from "./kanban-column";
 import { useQueryProcessor } from "@/hooks/useTanstackQuery";
 import { COLUMN_LABELS, COLUMNS, ticketStatusConfig } from "../constants/type";
+import { useAuth } from "@/hooks/useAuth";
 
 export interface TicketsQuery {
   data: Tickets[];
@@ -14,6 +15,8 @@ export interface TicketsQuery {
 }
 
 export function KanbanBoard() {
+  const { user } = useAuth();
+
   const { data, isLoading } = useQueryProcessor<TicketsQuery>({
     url: "/tickets/list",
     queryParams: {},

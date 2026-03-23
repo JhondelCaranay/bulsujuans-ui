@@ -7,7 +7,7 @@ export enum ComplaintType {
   nudity_or_sexual_activity = "NUDITY_OR_SEXUAL_ACTIVITY",
   selling_or_promoting_of_restricted_items = "SELLING_OR_PROMOTING_OF_RESTRICTED_ITEMS",
   scam_or_fraud = "SCAM_OR_FRAUD",
-  other = "OTHER",
+  general_student_concern = "GENERAL_STUDENT_CONCERN",
 }
 
 export const complaintsOptions = [
@@ -34,6 +34,10 @@ export const complaintsOptions = [
   {
     value: ComplaintType.scam_or_fraud,
     label: "Scam or fraud",
+  },
+  {
+    value: ComplaintType.general_student_concern,
+    label: "General Student Concern",
   },
 ];
 

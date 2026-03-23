@@ -10,7 +10,7 @@ import { FormCheckbox } from "@/components/form/form-checkbox";
 import { FormDate } from "@/components/form/form-data";
 import { FormSubmitButton } from "@/components/form/form-submit-button";
 import { useMutateProcessor } from "@/hooks/useTanstackQuery";
-import { complaintsOptions, ComplaintType, TUpdateComplaintSchema } from "@/schema/complaints";
+import { complaintsOptions, TUpdateComplaintSchema } from "@/schema/complaints";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
