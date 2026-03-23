@@ -55,6 +55,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const isTokenExpired = (token: string) => {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+
+      return payload.exp < currentTime;
+    } catch (err) {
+      return true;
+    }
+  };
   // ----------------------------
   // FETCH USER USING REFRESH-TOKEN AND VALIDATE PERMISSIONS
   // ----------------------------
@@ -63,7 +73,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const fetchUser = async () => {
         const refreshToken = localStorage.getItem("refresh-token");
 
-        if (!refreshToken) {
+        if (!refreshToken || isTokenExpired(refreshToken)) {
+          setUser(null);
+          setIsAuthenticated(false);
+          localStorage.removeItem("access-token");
+          localStorage.removeItem("refresh-token");
           router.replace("/");
           return;
         }
